@@ -5,9 +5,15 @@ import com.restapitutorial.restapitutorial.DTO.EmployeeDTO;
 import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
 import com.restapitutorial.restapitutorial.Repository.EmployeeRepository;
 import com.restapitutorial.restapitutorial.Services.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -26,9 +32,11 @@ public class Employee {
 
     @GetMapping(path = "/{employeeId}")
     //use @PathVariable is used when  parameter is essential part  of URL
-    public EmployeeDTO getEmployeeByid(@PathVariable Long employeeId) {
-//           return new EmployeeDTO(employeeId , "praveen" , "praveen@gmail.com" , 19 , LocalDate.of(2025 , 12 , 4) , true );
-     return  employeeService.getEmployeeByid(employeeId);
+    public ResponseEntity<EmployeeDTO> getEmployeeByid(@PathVariable Long employeeId) {
+        Optional<EmployeeDTO> employeeDTO =   employeeService.getEmployeeByid(employeeId);
+
+        return employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
+                 .orElse(ResponseEntity.notFound().build());
 
     }
 
@@ -42,8 +50,8 @@ public class Employee {
 
     @GetMapping
      // use query parameter when this is optional
-     public String getAllemployee(@RequestParam(required = false)  Integer age , @RequestParam(required = false)  String byAge ){
-         return  "age is " + age  + " "  ;
+     public ResponseEntity<List<EmployeeDTO>> getAllemployee(@RequestParam(required = false)  Integer age , @RequestParam(required = false)  String byAge ){
+         return   ResponseEntity.ok(employeeService.getAllEmployee()) ;
      }
 
 
@@ -56,17 +64,30 @@ public class Employee {
 
 
     @PostMapping
-    public EmployeeDTO addNewemployee(@RequestBody  EmployeeDTO employeeDTO){
-      return  employeeService.addEmployee(employeeDTO);
+    public ResponseEntity<EmployeeDTO> addNewemployee(@RequestBody  EmployeeDTO employeeDTO){
+       EmployeeDTO savedEmployee =  employeeService.addEmployee(employeeDTO);
+       return new ResponseEntity<>(savedEmployee , HttpStatus.CREATED);
 
     }
 
 
-
-
-    @PutMapping
-    public  String updateEmployee(){
-        return "update the  employee";
+    @PutMapping(path = "/{employeeId}") //used for update whole data
+    public  ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long employeeId , @RequestBody EmployeeDTO employeeDTO){
+        return  ResponseEntity.ok(employeeService.updateEmployeeById(employeeId , employeeDTO)) ;
     }
+
+
+    @DeleteMapping(path ="/{employeeId}")
+    public void deleteEmployeeById(@PathVariable Long employeeId){
+          employeeService.deleteEmployeeById(employeeId);
+    }
+
+    @PatchMapping(path="/{employeeId}")
+    public ResponseEntity<EmployeeDTO> updatePartialEmployeeById(@PathVariable Long employeeId , @RequestBody Map<String , Object> updates ){
+           EmployeeDTO employeeDTO = employeeService.updatePartialEmployeeById(employeeId , updates);
+           if(employeeDTO == null) return  ResponseEntity.notFound().build();
+           return ResponseEntity.ok(employeeDTO);
+    }
+
 
 }
