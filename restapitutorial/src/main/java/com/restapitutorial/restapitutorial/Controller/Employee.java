@@ -5,6 +5,7 @@ import com.restapitutorial.restapitutorial.DTO.EmployeeDTO;
 import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
 import com.restapitutorial.restapitutorial.Repository.EmployeeRepository;
 import com.restapitutorial.restapitutorial.Services.EmployeeService;
+import com.restapitutorial.restapitutorial.excption.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -36,9 +38,11 @@ public class Employee {
         Optional<EmployeeDTO> employeeDTO =   employeeService.getEmployeeByid(employeeId);
 
         return employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
-                 .orElse(ResponseEntity.notFound().build());
+                 .orElseThrow( () -> new ResourceNotFoundException("employee not found " +  employeeId));
 
     }
+
+
 
 
 //      @GetMapping(path = "/{employeeId}")

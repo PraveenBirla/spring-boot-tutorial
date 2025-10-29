@@ -4,6 +4,7 @@ package com.restapitutorial.restapitutorial.Services;
 import com.restapitutorial.restapitutorial.DTO.EmployeeDTO;
 import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
 import com.restapitutorial.restapitutorial.Repository.EmployeeRepository;
+import com.restapitutorial.restapitutorial.excption.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,18 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployeeById(Long employeeId, EmployeeDTO employeeDTO) {
+
+        boolean isExist = IsEmployeeExistWithId(employeeId);
+        if(!isExist) throw new ResourceNotFoundException("Employee is Not Exist with ID:" + employeeId);
+
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO , EmployeeEntity.class);
         employeeEntity.setId(employeeId);
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
         return modelMapper.map(savedEmployeeEntity , EmployeeDTO.class);
+    }
+
+    public boolean IsEmployeeExistWithId(Long EmployeeID){
+        return employeeRepository.existsById(EmployeeID);
     }
 
     public List<EmployeeDTO> getAllEmployee() {
@@ -57,6 +66,8 @@ public class EmployeeService {
     }
 
     public void deleteEmployeeById(Long employeeId) {
+        Boolean isExist = IsEmployeeExistWithId(employeeId);
+        if(!isExist) throw  new ResourceNotFoundException("employe not found with ID "+employeeId);
         employeeRepository.deleteById(employeeId);
     }
 
