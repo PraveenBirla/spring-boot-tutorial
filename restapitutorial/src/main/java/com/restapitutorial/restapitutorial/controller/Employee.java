@@ -1,20 +1,16 @@
-package com.restapitutorial.restapitutorial.Controller;
+package com.restapitutorial.restapitutorial.controller;
 
 
-import com.restapitutorial.restapitutorial.DTO.EmployeeDTO;
-import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
-import com.restapitutorial.restapitutorial.Repository.EmployeeRepository;
-import com.restapitutorial.restapitutorial.Services.EmployeeService;
+import com.restapitutorial.restapitutorial.dto.EmployeeDTO;
+import com.restapitutorial.restapitutorial.services.EmployeeService;
 import com.restapitutorial.restapitutorial.excption.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -68,7 +64,7 @@ public class Employee {
 
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> addNewemployee(@RequestBody  EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> addNewemployee(@RequestBody @Valid EmployeeDTO employeeDTO){
        EmployeeDTO savedEmployee =  employeeService.addEmployee(employeeDTO);
        return new ResponseEntity<>(savedEmployee , HttpStatus.CREATED);
 
@@ -76,7 +72,7 @@ public class Employee {
 
 
     @PutMapping(path = "/{employeeId}") //used for update whole data
-    public  ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long employeeId , @RequestBody EmployeeDTO employeeDTO){
+    public  ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable  Long employeeId , @RequestBody @Valid  EmployeeDTO employeeDTO){
         return  ResponseEntity.ok(employeeService.updateEmployeeById(employeeId , employeeDTO)) ;
     }
 

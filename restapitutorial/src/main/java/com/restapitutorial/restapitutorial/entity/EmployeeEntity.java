@@ -1,28 +1,36 @@
-package com.restapitutorial.restapitutorial.DTO;
+package com.restapitutorial.restapitutorial.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
-
+@Entity
+@Table(name="employee")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDTO {
+@NoArgsConstructor
+public class EmployeeEntity {
 
-    private  Long Id;
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Long id;
+
 
     private String name ;
 
     private String email;
 
+    private String role;
+
     private int age ;
 
     private LocalDate joining;
+
+    private  Double salary;
 
     private Boolean isActive;
 

@@ -1,6 +1,6 @@
-package com.restapitutorial.restapitutorial.Repository;
+package com.restapitutorial.restapitutorial.repository;
 
-import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
+import com.restapitutorial.restapitutorial.entity.EmployeeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

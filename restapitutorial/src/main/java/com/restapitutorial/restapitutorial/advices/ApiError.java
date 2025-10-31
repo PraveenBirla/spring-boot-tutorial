@@ -3,6 +3,8 @@ package com.restapitutorial.restapitutorial.advices;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +14,6 @@ public class ApiError {
     private HttpStatus status ;
     private  String message ;
     private List<String> subError;
+
+
 }

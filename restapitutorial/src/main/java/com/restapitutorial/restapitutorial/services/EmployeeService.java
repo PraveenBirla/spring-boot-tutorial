@@ -1,9 +1,9 @@
-package com.restapitutorial.restapitutorial.Services;
+package com.restapitutorial.restapitutorial.services;
 
 
-import com.restapitutorial.restapitutorial.DTO.EmployeeDTO;
-import com.restapitutorial.restapitutorial.Entity.EmployeeEntity;
-import com.restapitutorial.restapitutorial.Repository.EmployeeRepository;
+import com.restapitutorial.restapitutorial.dto.EmployeeDTO;
+import com.restapitutorial.restapitutorial.entity.EmployeeEntity;
+import com.restapitutorial.restapitutorial.repository.EmployeeRepository;
 import com.restapitutorial.restapitutorial.excption.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
