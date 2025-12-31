@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,10 @@ public class UserService implements UserDetailsService {
     }
 
 
+   public User getUserByEmail(String email){
+         return userRepository.findByEmail(email).orElse(null);
+   }
+
     public User getUserById(Long id){
         return userRepository.findById(id).orElseThrow( () -> new RuntimeException("jadedness"));
     }
@@ -57,4 +62,7 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public User save(User newUser) {
+        return userRepository.save(newUser);
+    }
 }
