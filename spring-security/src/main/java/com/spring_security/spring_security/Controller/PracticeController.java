@@ -3,6 +3,8 @@ package com.spring_security.spring_security.Controller;
 import com.spring_security.spring_security.entities.User;
 import com.spring_security.spring_security.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +17,10 @@ public class PracticeController {
 
     private final UserService userService;
 
+    @Secured("ROLE_USER")
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('USER') AND hasAuthority('POST_VIEW')")
+    //@PreAuthorize("@PostService.isOwnerOfPost(postId)")
     public User getUserById(@PathVariable Long userId){
         return userService.getUserById(userId);
     }

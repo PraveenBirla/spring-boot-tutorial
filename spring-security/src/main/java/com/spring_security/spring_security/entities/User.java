@@ -1,14 +1,19 @@
 package com.spring_security.spring_security.entities;
 
 
+import com.spring_security.spring_security.entities.enums.Permission;
+import com.spring_security.spring_security.entities.enums.Roles;
+import com.spring_security.spring_security.utils.PermissionMapping;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +24,7 @@ import java.util.List;
 @Builder
 public class User  implements UserDetails {
 
-      @Id
+       @Id
        @GeneratedValue(strategy = GenerationType.IDENTITY)
        private Long id ;
 
@@ -30,9 +35,27 @@ public class User  implements UserDetails {
 
        private String name;
 
+       @ElementCollection(fetch = FetchType.EAGER)
+       @Enumerated(EnumType.STRING)
+       private Set<Roles> roles ;
+
+        @ElementCollection(fetch = FetchType.EAGER)
+       @Enumerated(EnumType.STRING)
+       private Set<Permission> permissions;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+       Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+       roles.forEach(
+              roles1 -> { Set<SimpleGrantedAuthority> permissions =
+                       PermissionMapping.getAuthorityForRole(roles1);
+                  authorities.add(new SimpleGrantedAuthority("ROLE_" + roles1.name()));
+                authorities.addAll(permissions);
+              }
+       );
+        return authorities;
     }
 
     @Override
